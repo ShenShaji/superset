@@ -36,7 +36,7 @@ import { CronError } from 'src/components/CronPicker';
 import { RadioChangeEvent } from 'src/components';
 import { ReportObject, NOTIFICATION_FORMATS } from 'src/views/CRUD/alert/types';
 import { reportSelector } from 'src/views/CRUD/hooks';
-import { ReportType } from 'src/dashboard/util/constants';
+import { CreationMethod } from './HeaderReportDropdown';
 import {
   antDErrorAlertStyles,
   StyledModal,
@@ -68,12 +68,6 @@ interface ChartObject {
   triggerQuery: boolean;
   lastRendered: number;
 }
-
-// const errorMapping = {
-//   'Name must be unique': t(
-//     'A report with this name exists, please enter a new name.',
-//   ),
-// };
 interface ReportProps {
   onHide: () => {};
   onReportAdd: (report?: ReportObject) => {};
@@ -161,7 +155,6 @@ const reportReducer = (
 };
 
 function ReportModal({
-  onReportAdd,
   onHide,
   show = false,
   dashboardId,
@@ -187,8 +180,8 @@ function ReportModal({
   // Report fetch logic
   const report = useSelector<any, ReportObject>(state => {
     const resourceType = dashboardId
-      ? ReportType.DASHBOARDS
-      : ReportType.CHARTS;
+      ? CreationMethod.DASHBOARDS
+      : CreationMethod.CHARTS;
     return reportSelector(state, resourceType, dashboardId || chart?.id);
   });
   const isEditMode = report && Object.keys(report).length;
@@ -243,8 +236,6 @@ function ReportModal({
         onReducerChange(ActionType.error, message);
       }
     }
-
-    if (onReportAdd) onReportAdd();
   };
 
   const wrappedTitle = (
